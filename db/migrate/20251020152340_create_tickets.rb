@@ -5,8 +5,8 @@ class CreateTickets < ActiveRecord::Migration[8.0]
       t.text :description
       t.integer :status
       t.integer :priority
-      t.references :requester, null: false, foreign_key: true
-      t.references :assignee, foreign_key: true
+      t.references :requester, null: false, foreign_key: { to_table: :users }
+      t.references :assignee, foreign_key: { to_table: :users }
       t.string :category
       t.datetime :closed_at
 

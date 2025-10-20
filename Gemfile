@@ -78,3 +78,5 @@ gem "omniauth-rails_csrf_protection"
 gem "omniauth-google-oauth2"
 
 gem "dotenv-rails"
+
+gem "pundit", "~> 2.5"

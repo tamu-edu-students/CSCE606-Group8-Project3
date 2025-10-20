@@ -1,6 +1,6 @@
 class Ticket < ApplicationRecord
-  belongs_to :requester, class_name: 'User'
-  belongs_to :assignee, class_name: 'User', optional: true
+  belongs_to :requester, class_name: "User"
+  belongs_to :assignee, class_name: "User", optional: true
 
   enum :status, { open: 0, pending: 1, resolved: 2, closed: 3 }, validate: true
   enum :priority, { low: 0, normal: 1, high: 2 }, validate: true
@@ -16,9 +16,9 @@ class Ticket < ApplicationRecord
   private
 
   def set_closed_at
-    if status == 'closed'
+    if status == "closed"
       self.closed_at = Time.current
-    elsif status_was == 'closed' && status != 'closed'
+    elsif status_was == "closed" && status != "closed"
       self.closed_at = nil
     end
   end

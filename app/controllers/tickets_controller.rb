@@ -27,7 +27,7 @@ class TicketsController < ApplicationController
     end
 
     if @ticket.save
-      redirect_to @ticket, notice: 'Ticket was successfully created.'
+      redirect_to @ticket, notice: "Ticket was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
@@ -40,7 +40,7 @@ class TicketsController < ApplicationController
   def update
     authorize @ticket
     if @ticket.update(ticket_params)
-      redirect_to @ticket, notice: 'Ticket was successfully updated.'
+      redirect_to @ticket, notice: "Ticket was successfully updated."
     else
       render :edit, status: :unprocessable_entity
     end
@@ -49,7 +49,7 @@ class TicketsController < ApplicationController
   def destroy
     authorize @ticket
     @ticket.destroy
-    redirect_to tickets_url, notice: 'Ticket was successfully destroyed.'
+    redirect_to tickets_url, notice: "Ticket was successfully destroyed."
   end
 
   def assign
@@ -73,9 +73,9 @@ class TicketsController < ApplicationController
     agents = User.where(role: :agent).order(:id)
     return agents.first if agents.empty?
 
-    last_assigned_index = Setting.get('last_assigned_index').to_i || 0
+    last_assigned_index = Setting.get("last_assigned_index").to_i || 0
     next_index = (last_assigned_index + 1) % agents.size
-    Setting.set('last_assigned_index', next_index.to_s)
+    Setting.set("last_assigned_index", next_index.to_s)
     agents[next_index]
   end
 end

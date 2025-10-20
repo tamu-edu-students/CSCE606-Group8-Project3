@@ -14,6 +14,6 @@ class Setting < ApplicationRecord
   end
 
   def self.auto_round_robin?
-    get('assignment_strategy') == 'round_robin'
+    get("assignment_strategy") == "round_robin"
   end
 end

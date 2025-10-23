@@ -55,7 +55,7 @@ end
 Given("the following tickets exist:") do |table|
   table.hashes.each do |row|
     # Find or create the requester
-  requester_email = row.delete("requester_email") || "testuser@example.com"
+    requester_email = row.delete("requester_email") || "testuser@example.com"
     # Find by email to avoid creating duplicate users (OmniAuth test helper may have already
     # created a user with this email). Only set missing attributes.
     requester = User.find_or_initialize_by(email: requester_email)

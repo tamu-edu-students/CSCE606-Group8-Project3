@@ -12,18 +12,21 @@ class Ticket < ApplicationRecord
   enum :status, { open: 0, pending: 1, resolved: 2, closed: 3 }, validate: true
   enum :priority, { low: 0, medium: 1, high: 2 }, validate: true
 
-  attribute :priority, :integer, default: -> { Ticket.priorities[:medium] }
-
   validates :subject, presence: true
   validates :description, presence: true
   validates :status, presence: true
-  validates :priority, inclusion: { in: priorities.keys }
+  validates :priority, presence: true
   validates :category, presence: true, inclusion: { in: CATEGORY_OPTIONS }
   validates :requester, presence: true
 
   before_save :set_closed_at
+  after_initialize :set_default_priority, if: :new_record?
 
   private
+
+  def set_default_priority
+    self.priority ||= :medium
+  end
 
   def set_closed_at
     if closed?

@@ -3,7 +3,7 @@ class CommentPolicy < ApplicationPolicy
     return false unless record.ticket.open?
 
     if user.requester?
-      record.ticket.requester == user && record.public?
+      record.ticket.requester == user && record.visibility_public?
     elsif user.agent? || user.admin?
       true
     else

@@ -8,7 +8,14 @@ RSpec.describe Comment, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:body) }
-    it { should define_enum_for(:visibility).with_values(public: 0, internal: 1) }
+  end
+
+  describe 'enums' do
+    it 'defines visibility enum with prefixed helpers' do
+      expect(Comment.visibilities.symbolize_keys).to eq({ public: 0, internal: 1 })
+      expect(build(:comment)).to respond_to(:visibility_public?)
+      expect(build(:comment)).to respond_to(:visibility_internal!)
+    end
   end
 
   describe 'scopes' do
@@ -17,7 +24,7 @@ RSpec.describe Comment, type: :model do
       older = create(:comment, ticket: ticket, created_at: 2.days.ago)
       newer = create(:comment, ticket: ticket, created_at: 1.day.ago)
 
-      expect(ticket.comments.chronological).to eq([older, newer])
+      expect(ticket.comments.chronological).to eq([ older, newer ])
     end
   end
 end

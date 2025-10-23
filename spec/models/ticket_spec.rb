@@ -20,7 +20,7 @@ RSpec.describe Ticket, type: :model do
     it { should validate_presence_of(:subject) }
     it { should validate_presence_of(:description) }
     it { should validate_presence_of(:status) }
-    it { should validate_inclusion_of(:priority).in_array(%w[low medium high]) }
+    it { should validate_presence_of(:priority) }
     it { should validate_presence_of(:category) }
     it { should validate_inclusion_of(:category).in_array(Ticket::CATEGORY_OPTIONS) }
     it { should validate_presence_of(:requester) }

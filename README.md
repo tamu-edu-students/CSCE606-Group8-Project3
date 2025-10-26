@@ -4,59 +4,49 @@
 
 This application is a Role-Based Ticket Management System built with Ruby on Rails. It enables authenticated users to create, assign, and comment on support tickets, with visibility rules and administrative controls.
 
-Key Layers
+## Architecture overview
 
-Presentation Layer (Views & Routes):
-Provides the UI for users to view, create, edit, and manage tickets and comments. Interacts with controllers to trigger application logic.
+### Key layers
 
-Controller Layer:
-Handles incoming HTTP requests, applies Pundit authorization policies, and interacts with models to retrieve or modify data.
-Includes:
+- **Presentation (Views & Routes)**
+	- Provides the UI for users to view, create, edit and manage tickets and comments.
+	- Pages wire up to controller actions and present model data.
 
-TicketsController for ticket lifecycle management.
+- **Controller layer**
+	- Handles HTTP requests, enforces Pundit authorization and coordinates model updates.
+	- Important controllers:
+		- **TicketsController** — ticket lifecycle (new, create, edit, update, destroy, assign).
+		- **CommentsController** — threaded/public/internal comments on tickets.
+		- **UsersController** — sysadmin user management.
+		- **SessionsController** — OmniAuth-based login callbacks and session lifecycle.
 
-CommentsController for threaded discussion on tickets.
+- **Model layer (ActiveRecord)**
+	- Encapsulates business rules and associations.
+		- **User** — authenticated via Google (OmniAuth); roles: `user`, `staff`, `sysadmin`.
+		- **Ticket** — core entity; enums for `status` and `priority`; belongs_to `requester` and optional `assignee`.
+		- **Comment** — messages attached to tickets; supports internal/public visibility.
+		- **Setting** — simple key/value store used for runtime configuration (e.g., round-robin index).
 
-UsersController for sysadmin-level user management.
+- **Authorization & authentication**
+	- **Authentication**: Google OAuth2 through `omniauth-google-oauth2` (test flows use OmniAuth mocks).
+	- **Authorization**: Pundit policies enforce role-based permissions per resource/action.
 
-SessionsController for OAuth2-based authentication.
+- **Database layer**
+	- Persistent storage for users, tickets, comments and settings.
+	- Foreign key constraints and validations ensure referential integrity (tickets require a requester).
 
-Model Layer (ActiveRecord):
-Encapsulates business logic and relationships:
+### Highlights
 
-User: Authenticated via Google OAuth (OmniAuth), assigned roles (user, staff, sysadmin).
+- **Round-robin auto assignment**
+	- When enabled, new tickets are auto-assigned to the next staff agent tracked by `Setting` (last index).
 
-Ticket: Core entity with category, status, and priority enums.
+- **Role-based access control**
+	- **Requester (user)** — create tickets, view own tickets and public comments.
+	- **Staff (agent)** — view assigned tickets, claim/assign and add internal comments.
+	- **Sysadmin** — manage users and system settings.
 
-Comment: Threaded messages on tickets with visibility controls.
-
-Setting: Key-value storage used for dynamic system configurations (e.g., round-robin agent assignment).
-
-Authorization & Authentication:
-
-Authentication: via Google OAuth2 (omniauth-google-oauth2).
-
-Authorization: via Pundit, enforcing role-based permissions on each resource.
-
-Database Layer:
-Persistent storage for users, tickets, comments, and system settings.
-Foreign key constraints ensure data integrity (e.g., tickets must have a requester).
-
-Highlights
-
-Round-Robin Auto Assignment:
-When a ticket is created, it can automatically be assigned to the next available staff agent, managed through Setting.
-
-Role-Based Access Control:
-
-Requester (User): Can create and view own tickets and public comments.
-
-Staff (Agent): Can view assigned tickets and add internal comments.
-
-Sysadmin: Can manage users and system settings.
-
-Extensibility:
-Easily expandable to add new categories, notification systems, or analytics dashboards.
+- **Extensibility**
+	- Designed to add new categories, notification channels or analytics with minimal changes to core models.
 
 
 

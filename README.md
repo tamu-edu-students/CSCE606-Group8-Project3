@@ -56,27 +56,3 @@ Below are the architecture and class diagrams. The feature renderer used for tes
 
 ![Class Diagram](doc/images/project2_class_diagram.png)
 
-## How to run (notes)
-
-- Ruby version: specify in `.ruby-version` or Gemfile
-- System dependencies: database (SQLite/Postgres), Redis (optional for jobs), etc.
-- Configuration: set `config/credentials` and OAuth client IDs/secrets for Google
-- Database setup:
-  - `bundle install`
-  - `rails db:create db:migrate db:seed`
-
-- Running tests:
-  - Unit / RSpec: `bundle exec rspec`
-  - Cucumber features: `bundle exec cucumber features/<feature>.feature`
-
-## Common development tips
-
-- The test Cucumber setup in `features/support` uses an OmniAuth test helper that logs in a test user (see `features/support/login_helper.rb`). Many feature definitions assume the test user email `testuser@example.com` — if you add features that interact with authentication, either use the project's login helper or seed matching users in the feature tables.
-
-## TODO / Checklist (suggested)
-
-- Add detailed environment and dependency instructions
-- Add deployment instructions and example container/Docker setup
-- Add docs images to `doc/images/` to make the README portable
-
----

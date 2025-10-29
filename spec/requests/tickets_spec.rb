@@ -110,4 +110,30 @@ RSpec.describe "Tickets", type: :request do
       }.to raise_error(Pundit::NotAuthorizedError)
     end
   end
+
+  describe "GET /tickets/:id (privacy)" do
+    let!(:ticket) { create(:ticket, requester: requester) }
+
+    it "allows the requester (owner) to view their ticket" do
+      sign_in(requester)
+      get ticket_path(ticket)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(ticket.subject)
+    end
+
+    it "prevents other requesters from viewing the ticket" do
+      sign_in(other_user)
+      expect {
+        get ticket_path(ticket)
+      }.to raise_error(Pundit::NotAuthorizedError)
+    end
+
+    it "allows an agent to view any ticket" do
+      agent = create(:user, :agent)
+      sign_in(agent)
+      get ticket_path(ticket)
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to include(ticket.subject)
+    end
+  end
 end

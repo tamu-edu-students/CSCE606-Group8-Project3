@@ -16,7 +16,7 @@ RSpec.describe "Ticket attachments", type: :request do
 
       uploaded = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/sample.txt'), 'text/plain')
 
-      patch ticket_path(ticket), params: { ticket: { attachments: [uploaded] } }
+      patch ticket_path(ticket), params: { ticket: { attachments: [ uploaded ] } }
       ticket.reload
 
       expect(ticket.attachments).to be_attached
@@ -29,7 +29,7 @@ RSpec.describe "Ticket attachments", type: :request do
 
       uploaded = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/sample.txt'), 'text/plain')
 
-      patch ticket_path(ticket), params: { ticket: { attachments: [uploaded] } }
+      patch ticket_path(ticket), params: { ticket: { attachments: [ uploaded ] } }
       ticket.reload
 
       expect(ticket.attachments.attached?).to be_falsey
@@ -39,13 +39,13 @@ RSpec.describe "Ticket attachments", type: :request do
       # attach an initial file
       sign_in(agent)
       uploaded = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/sample.txt'), 'text/plain')
-      patch ticket_path(ticket), params: { ticket: { attachments: [uploaded] } }
+      patch ticket_path(ticket), params: { ticket: { attachments: [ uploaded ] } }
       ticket.reload
       expect(ticket.attachments).to be_attached
 
       # now remove it
       att_id = ticket.attachments.first.id
-      patch ticket_path(ticket), params: { ticket: { remove_attachment_ids: [att_id] } }
+      patch ticket_path(ticket), params: { ticket: { remove_attachment_ids: [ att_id ] } }
       ticket.reload
       expect(ticket.attachments.attached?).to be_falsey
     end
@@ -54,14 +54,14 @@ RSpec.describe "Ticket attachments", type: :request do
       # set up attachment as staff
       sign_in(agent)
       uploaded = Rack::Test::UploadedFile.new(Rails.root.join('spec/fixtures/files/sample.txt'), 'text/plain')
-      patch ticket_path(ticket), params: { ticket: { attachments: [uploaded] } }
+      patch ticket_path(ticket), params: { ticket: { attachments: [ uploaded ] } }
       ticket.reload
       expect(ticket.attachments).to be_attached
 
       # now attempt removal as requester
       sign_in(requester)
       att_id = ticket.attachments.first.id
-      patch ticket_path(ticket), params: { ticket: { remove_attachment_ids: [att_id] } }
+      patch ticket_path(ticket), params: { ticket: { remove_attachment_ids: [ att_id ] } }
       ticket.reload
       # shouldn't be removed because permitted_attributes won't allow this param for requester
       expect(ticket.attachments.attached?).to be_truthy

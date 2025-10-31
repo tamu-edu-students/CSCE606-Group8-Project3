@@ -8,6 +8,7 @@ class Ticket < ApplicationRecord
   belongs_to :requester, class_name: "User"
   belongs_to :assignee, class_name: "User", optional: true
   belongs_to :approver, class_name: "User", optional: true
+  has_many_attached :attachments
   has_many :comments, dependent: :destroy
 
   enum :status, { open: 0, in_progress: 1, on_hold: 2, resolved: 3 }, validate: true

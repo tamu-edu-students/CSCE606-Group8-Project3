@@ -83,6 +83,20 @@
     <div class="prose"><%= simple_format(@ticket.description) %></div>
   </section>
 
+  <% if @ticket.attachments.attached? %>
+    <section class="ticket-attachments">
+      <h2>Attachments</h2>
+      <ul>
+        <% @ticket.attachments.each do |att| %>
+          <li>
+            <%= link_to att.filename.to_s, url_for(att), target: "_blank", rel: "noopener" %>
+            (<%= number_to_human_size(att.byte_size) %>)
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
   <% if policy(@ticket).assign? %>
     <section class="assign-section">
       <div class="assign-card">

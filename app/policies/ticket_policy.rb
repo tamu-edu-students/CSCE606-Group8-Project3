@@ -24,6 +24,8 @@ class TicketPolicy < ApplicationPolicy
     if user.admin? || user.agent?
       attrs << :approval_status
       attrs << :approval_reason
+      # allow attachments array for staff/admin when editing/updating
+      attrs << { attachments: [] }
     end
     attrs
   end

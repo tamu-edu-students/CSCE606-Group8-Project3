@@ -50,6 +50,21 @@ class TicketsController < ApplicationController
 
   def update
     authorize @ticket
+    # Allow staff/admin to remove attachments (handled before attribute update)
+    if (current_user&.agent? || current_user&.admin?) && params.dig(:ticket, :remove_attachment_ids).present?
+      ids = Array(params.dig(:ticket, :remove_attachment_ids)).map(&:to_i)
+      @ticket.attachments.each do |att|
+        att.purge if ids.include?(att.id)
+      end
+    end
+
+    # Attach any uploaded files explicitly (some test drivers may not trigger attach via update)
+    if (current_user&.agent? || current_user&.admin?) && params.dig(:ticket, :attachments).present?
+      Array(params.dig(:ticket, :attachments)).each do |uploaded|
+        @ticket.attachments.attach(uploaded)
+      end
+    end
+
     # If current user is staff/admin and approval params are present, handle approval flow
     if (current_user&.agent? || current_user&.admin?) && params.dig(:ticket, :approval_status).present?
       approval_param = params.dig(:ticket, :approval_status).to_s

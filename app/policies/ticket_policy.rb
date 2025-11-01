@@ -20,6 +20,13 @@ class TicketPolicy < ApplicationPolicy
     attrs = %i[subject description priority category]
     attrs << :status if change_status?
     attrs << :assignee_id if user.admin? || user.agent?
+    # allow staff/admin to set approval fields from the edit form
+    if user.admin? || user.agent?
+      attrs << :approval_status
+      attrs << :approval_reason
+      # allow attachments array for staff/admin when editing/updating
+      attrs << { attachments: [] }
+    end
     attrs
   end
 
@@ -45,6 +52,14 @@ class TicketPolicy < ApplicationPolicy
   end
 
   def assign?
+    user.agent? || user.admin?
+  end
+
+  def approve?
+    user.agent? || user.admin?
+  end
+
+  def reject?
     user.agent? || user.admin?
   end
 

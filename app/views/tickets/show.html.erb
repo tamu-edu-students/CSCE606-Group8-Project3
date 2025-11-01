@@ -6,6 +6,15 @@
   </nav>
 
   <h1><%= @ticket.subject %></h1>
+
+  <p><strong>Status:</strong> <%= @ticket.status.to_s.titleize %></p>
+  <p><strong>Priority:</strong> <%= @ticket.priority %></p>
+  <p><strong>Requester:</strong> <%= @ticket.requester.display_name %></p>
+  <p><strong>Assignee:</strong> <%= @ticket.assignee&.display_name || 'Unassigned' %></p>
+  <p><strong>Category:</strong> <%= @ticket.category %></p>
+  <p><strong>Description:</strong></p>
+  <p><%= @ticket.description %></p>
+
   <div class="headline-bar">
     <div class="headline-left">
       <%= link_to "Back", tickets_path, class: "btn btn-secondary" %>
@@ -15,11 +24,12 @@
       <% if policy(@ticket).close? %>
         <%= button_to "Mark as Resolved", close_ticket_path(@ticket), method: :patch, data: { confirm: "Mark this ticket as resolved?" }, class: "btn btn-danger-outline" %>
       <% end %>
-      <% if policy(@ticket).destroy? %>
-        <%= button_to "Destroy", ticket_path(@ticket), method: :delete, data: { confirm: "Delete this ticket?" }, class: "btn btn-danger" %>
-      <% end %>
+      
     </div>
   </div>
+
+  <%# Approval controls for staff/sysadmin (approve / reject) %>
+  <%= render 'approval_controls' %>
 
   <section class="ticket-details">
     <dl class="details-list">
@@ -71,6 +81,20 @@
     <div class="prose"><%= simple_format(@ticket.description) %></div>
   </section>
 
+  <% if @ticket.attachments.attached? %>
+    <section class="ticket-attachments">
+      <h2>Attachments</h2>
+      <ul>
+        <% @ticket.attachments.each do |att| %>
+          <li>
+            <%= link_to att.filename.to_s, url_for(att), target: "_blank", rel: "noopener" %>
+            (<%= number_to_human_size(att.byte_size) %>)
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+
   <% if policy(@ticket).assign? %>
     <section class="assign-section">
       <div class="assign-card">
@@ -119,5 +143,11 @@
         </div>
       <% end %>
     </section>
+  <% end %>
+
+  <%= link_to 'Edit', edit_ticket_path(@ticket) %>
+  <%= link_to 'Back', tickets_path %>
+  <% if policy(@ticket).destroy? %>
+    <%= button_to "Destroy", ticket_path(@ticket), method: :delete, data: { confirm: "Delete this ticket?" }, class: "btn btn-danger" %>
   <% end %>
 </div>

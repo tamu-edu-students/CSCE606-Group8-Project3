@@ -150,10 +150,13 @@ class TicketsController < ApplicationController
 
   def assign
     authorize @ticket, :assign?
-    agent = User.find(params[:ticket][:assignee_id])
-    @ticket.update(assignee: agent)
-    redirect_to @ticket, notice: "Ticket assigned to #{agent.display_name}."
+    updates = {}
+    updates[:team_id] = params[:ticket][:team_id] if params.dig(:ticket, :team_id).present?
+    updates[:assignee_id] = params[:ticket][:assignee_id] if params.dig(:ticket, :assignee_id).present?
+    @ticket.update(updates) if updates.any?
+    redirect_to @ticket, notice: "Ticket assignment updated."
   end
+
 
   private
 

@@ -14,7 +14,7 @@ Feature: Assign Ticket
     When I visit the ticket page
     And I select "Bob" from the agent dropdown
     And I press "Assign" within the assignment form
-    Then I should see "Ticket assigned to Bob"
+    Then I should see "Ticket assignment updated."
     And the ticket should be assigned to "Bob"
 
   Scenario: Auto-assign ticket on creation when round-robin is enabled

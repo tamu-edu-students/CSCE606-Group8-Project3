@@ -1,4 +1,4 @@
-class AddApprovalFieldsToTickets < ActiveRecord::Migration[7.0]
+class AddApprovalFieldsToTickets < ActiveRecord::Migration[8.0]
   def change
     add_column :tickets, :approval_status, :integer, default: 0, null: false
     add_column :tickets, :approval_reason, :text

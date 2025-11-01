@@ -24,9 +24,7 @@
       <% if policy(@ticket).close? %>
         <%= button_to "Mark as Resolved", close_ticket_path(@ticket), method: :patch, data: { confirm: "Mark this ticket as resolved?" }, class: "btn btn-danger-outline" %>
       <% end %>
-      <% if policy(@ticket).destroy? %>
-        <%= button_to "Destroy", ticket_path(@ticket), method: :delete, data: { confirm: "Delete this ticket?" }, class: "btn btn-danger" %>
-      <% end %>
+      
     </div>
   </div>
 
@@ -149,5 +147,7 @@
 
   <%= link_to 'Edit', edit_ticket_path(@ticket) %>
   <%= link_to 'Back', tickets_path %>
-  <%= link_to 'Destroy', ticket_path(@ticket), method: :delete, data: { confirm: 'Are you sure?' } %>
+  <% if policy(@ticket).destroy? %>
+    <%= button_to "Destroy", ticket_path(@ticket), method: :delete, data: { confirm: "Delete this ticket?" }, class: "btn btn-danger" %>
+  <% end %>
 </div>

@@ -28,7 +28,7 @@ Ticketing System is a monolithic Rails application that handles ticket creation,
 
 The architecture diagram (rendered image) shows the major pieces and how requests flow through the system. See `docs/project2architecture_diagram.png` in the `docs/` folder.
 
-![Architecture diagram](/home/mihir/Downloads/Gemini_Generated_Image_otit34otit34otit.png)
+![Architecture diagram](docs/project2architecture_diagram.png)
 
 ### Architecture Decision Records (ADRs)
 

@@ -3,6 +3,24 @@
   <%= form_with url: request.path, method: :get, local: true, class: "filter-form" do |f| %>
     <div class="filter-row">
       <div class="filter-group">
+        <%= f.label :sort, "Sort", class: "filter-label" %>
+        <%= f.select :sort,
+              options_for_select(
+                [
+                  ["Newest first",          "newest"],
+                  ["Oldest first",          "oldest"],
+                  ["Priority high → low",   "priority_high"],
+                  ["Priority low → high",   "priority_low"],
+                  ["Status (A → Z)",        "status"]
+                ],
+                params[:sort] || "newest"
+              ),
+              { include_blank: false },
+              class: "filter-select"
+            %>
+      </div>
+
+      <div class="filter-group">
         <%= f.label :q, "Search", class: "filter-label" %>
         <%= f.text_field :q, value: params[:q], placeholder: "Search subject or description…", class: "filter-input" %>
       </div>

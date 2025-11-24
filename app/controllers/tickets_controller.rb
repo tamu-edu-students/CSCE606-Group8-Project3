@@ -6,6 +6,8 @@ class TicketsController < ApplicationController
     @tickets = policy_scope(Ticket).includes(:requester, :assignee, :team)
 
     apply_filters!
+    apply_sorting!
+
 
     load_filter_options
   end
@@ -23,7 +25,7 @@ class TicketsController < ApplicationController
                  .includes(:requester, :assignee, :team)
 
     apply_filters!
-
+    apply_sorting!
     load_filter_options
 
     render :index
@@ -242,6 +244,20 @@ class TicketsController < ApplicationController
     end
   end
 
+    SORT_OPTIONS = {
+    "newest"        => { column: "tickets.created_at", direction: :desc },
+    "oldest"        => { column: "tickets.created_at", direction: :asc  },
+    "priority_high" => { column: "tickets.priority",   direction: :desc },
+    "priority_low"  => { column: "tickets.priority",   direction: :asc  },
+    "status"        => { column: "tickets.status",     direction: :asc  }
+  }.freeze
+
+  def apply_sorting!
+    sort_key = params[:sort]
+    sort     = SORT_OPTIONS[sort_key] || SORT_OPTIONS["newest"]
+
+    @tickets = @tickets.order("#{sort[:column]} #{sort[:direction]}")
+  end
 
   def load_filter_options
     # You can tweak these to be more scoped if desired

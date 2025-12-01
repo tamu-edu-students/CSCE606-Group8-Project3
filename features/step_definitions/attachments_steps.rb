@@ -26,14 +26,14 @@ When("I submit the ticket form") do
 end
 
 When("I remove the attachment named {string}") do |filename|
-  # find the list item that contains the filename and check the remove checkbox inside it
-  within('.existing-attachments') do
-    li = find('li', text: filename)
+  # find the attachment item that contains the filename and check the remove checkbox inside it
+  within('.attachment-manage-list') do
+    item = find('.attachment-manage-item', text: filename)
     # checkbox may be hidden depending on styling; try visible then fallback
     begin
-      checkbox = li.find('input[type="checkbox"]', visible: true)
+      checkbox = item.find('input[type="checkbox"]', visible: true)
     rescue Capybara::ElementNotFound
-      checkbox = li.find('input[type="checkbox"]', visible: false)
+      checkbox = item.find('input[type="checkbox"]', visible: false)
     end
     checkbox.set(true)
   end

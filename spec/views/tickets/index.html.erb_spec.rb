@@ -37,7 +37,7 @@ RSpec.describe "tickets/index", type: :view do
   it "renders a list of tickets" do
     render
     assert_select 'h2>a', text: "Title", count: 2
-    assert_select 'p', text: /Status:/, count: 2
-    assert_select 'p', text: /Category:/, count: 2
+    assert_select 'span.status-badge', text: /In Progress|On Hold/, count: 2
+    assert_select 'span.status-badge', text: /Low/, count: 2
   end
 end

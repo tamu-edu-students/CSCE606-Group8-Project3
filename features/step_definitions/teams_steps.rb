@@ -87,10 +87,7 @@ end
 # ---------- Ticket assignment UI interactions ----------
 
 When('I select {string} from the team dropdown') do |team_name|
-  within(".assign-section") do
-    # Label in your view: "Assign to team:"
-    select team_name, from: "Assign to team:"
-  end
+  select team_name, from: "ticket_team_id"
 end
 
 
@@ -158,23 +155,7 @@ end
 # ---- When steps ----
 
 When('I leave the agent dropdown unassigned') do
-  if page.has_css?('.assign-section')
-    within('.assign-section') do
-      # Prefer selecting the explicit blank option text
-      if page.has_select?('Assign to agent:', with_options: [ 'Unassigned' ])
-        select 'Unassigned', from: 'Assign to agent:'
-      else
-        # Fallback: clear the select via setting empty value (RackTest)
-        find('#ticket_assignee_id', visible: :all).set('')
-      end
-    end
-  else
-    if page.has_select?('Assign to agent:', with_options: [ 'Unassigned' ])
-      select 'Unassigned', from: 'Assign to agent:'
-    else
-      find('#ticket_assignee_id', visible: :all).set('')
-    end
-  end
+  select 'Unassigned', from: 'ticket_assignee_id'
 end
 
 # ---- Then steps ----

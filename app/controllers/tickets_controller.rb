@@ -93,7 +93,7 @@ class TicketsController < ApplicationController
         begin
           @ticket.approve!(current_user)
           TicketMailer.with(ticket: @ticket).ticket_updated_email.deliver_later
-          
+
           redirect_to @ticket, notice: "Ticket was successfully updated." and return
         rescue => e
           @ticket.errors.add(:base, "Could not approve ticket: #{e.message}")

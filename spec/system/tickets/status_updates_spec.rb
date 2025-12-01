@@ -15,15 +15,15 @@ RSpec.describe "Ticket status and comments", type: :system do
     visit ticket_path(ticket)
 
     select "On Hold", from: "ticket_status"
-    click_button "Update Status"
+    click_button "Go"
 
     expect(page).to have_css(".status-badge", text: "On Hold")
 
-    fill_in "Comment", with: "Internal triage note"
+    fill_in "Leave a comment", with: "Internal triage note"
     select "Internal", from: "comment_visibility"
-    click_button "Post Comment"
+    click_button "Comment"
 
-    expect(page).to have_content("Comment added successfully.")
+    expect(page).to have_content("Internal triage note")
     within(".comments-list") do
       expect(page).to have_content("Internal")
       expect(page).to have_content("Internal triage note")
@@ -38,17 +38,16 @@ RSpec.describe "Ticket status and comments", type: :system do
     sign_in(requester)
     visit ticket_path(ticket)
 
-    expect(page).not_to have_button("Update Status")
+    expect(page).not_to have_button("Go")
     expect(page).to have_css(".status-badge", text: "In Progress")
     within(".comments-list") do
       expect(page).to have_content("Any update?")
       expect(page).not_to have_content("Internal diagnosis")
     end
 
-    fill_in "Comment", with: "Thanks for the update"
-    click_button "Post Comment"
+    fill_in "Leave a comment", with: "Thanks for the update"
+    click_button "Comment"
 
-    expect(page).to have_content("Comment added successfully.")
     within(".comments-list") do
       expect(page).to have_content("Thanks for the update")
       expect(page).to have_content("Public")

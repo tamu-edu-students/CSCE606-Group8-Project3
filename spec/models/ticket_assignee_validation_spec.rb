@@ -14,5 +14,4 @@ RSpec.describe Ticket, "assignee must belong to team" do
     t = Ticket.new(subject: "S", description: "D", category: Ticket::CATEGORY_OPTIONS.first, requester: requester, team: team, assignee: member)
     expect(t).to be_valid
   end
-
 end

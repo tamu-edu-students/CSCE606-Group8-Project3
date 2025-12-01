@@ -50,5 +50,4 @@ RSpec.describe "tickets/index", type: :view do
     # If you want to be strict, you can assert that at least one badge contains a category name:
     # assert_select '.status-badge', text: Ticket::CATEGORY_OPTIONS.first, minimum: 1
   end
-
 end

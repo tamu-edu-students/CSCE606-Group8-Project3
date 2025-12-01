@@ -93,7 +93,7 @@ class TicketsController < ApplicationController
         begin
           @ticket.approve!(current_user)
           TicketMailer.with(ticket: @ticket).ticket_updated_email.deliver_later
-          
+
           redirect_to @ticket, notice: "Ticket was successfully updated." and return
         rescue => e
           @ticket.errors.add(:base, "Could not approve ticket: #{e.message}")
@@ -256,7 +256,7 @@ class TicketsController < ApplicationController
     end
     apply_sort!
   end
-  
+
   def apply_sort!
     # One param that encodes both field + direction to keep the UI simple
     sort_param = params[:sort].presence || "created_at_desc"

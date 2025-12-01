@@ -27,7 +27,7 @@ RSpec.describe "tickets/index", type: :view do
       )
     ])
 
-    # NEW: filter options expected by the index view
+    # filter options expected by the index view
     assign(:status_options, Ticket.statuses.keys)
     assign(:approval_status_options, Ticket.approval_statuses.keys)
     assign(:category_options, Ticket::CATEGORY_OPTIONS)

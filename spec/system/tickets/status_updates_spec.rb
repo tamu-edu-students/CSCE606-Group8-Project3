@@ -14,8 +14,8 @@ RSpec.describe "Ticket status and comments", type: :system do
     sign_in(staff)
     visit ticket_path(ticket)
 
-    select "On Hold", from: "ticket_status"
-    click_button "Update Status"
+    select "On Hold", from: "ticket[status]"
+    click_button "Go"
 
     expect(page).to have_css(".status-badge", text: "On Hold")
 
@@ -40,7 +40,7 @@ RSpec.describe "Ticket status and comments", type: :system do
     sign_in(requester)
     visit ticket_path(ticket)
 
-    expect(page).not_to have_button("Update Status")
+    expect(page).not_to have_button("Go")
     expect(page).to have_css(".status-badge", text: "In Progress")
     within(".comments-list") do
       expect(page).to have_content("Any update?")

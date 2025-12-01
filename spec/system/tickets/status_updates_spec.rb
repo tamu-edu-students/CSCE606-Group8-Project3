@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Ticket status and comments", type: :system do
   let(:requester) { create(:user, :requester) }
-  let(:staff) { create(:user, :agent) }
+  let(:staff)     { create(:user, :agent) }
 
   before do
     driven_by(:rack_test)
@@ -19,8 +19,15 @@ RSpec.describe "Ticket status and comments", type: :system do
 
     expect(page).to have_css(".status-badge", text: "On Hold")
 
+<<<<<<< HEAD
     fill_in "comment[body]", with: "Internal triage note"
     select "Internal", from: "comment[visibility]"
+=======
+    # CHANGED: match label text in the view
+    fill_in "Leave a comment", with: "Internal triage note"
+    select "Internal", from: "comment_visibility"
+    # CHANGED: match submit text in the view
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74
     click_button "Comment"
 
     expect(page).to have_content("Comment added successfully.")
@@ -32,8 +39,8 @@ RSpec.describe "Ticket status and comments", type: :system do
 
   it "restricts requesters to public comments only" do
     ticket = create(:ticket, requester: requester, status: :in_progress)
-    create(:comment, ticket: ticket, author: staff, visibility: :internal, body: "Internal diagnosis")
-    create(:comment, ticket: ticket, author: requester, visibility: :public, body: "Any update?")
+    create(:comment, ticket: ticket, author: staff,     visibility: :internal, body: "Internal diagnosis")
+    create(:comment, ticket: ticket, author: requester, visibility: :public,   body: "Any update?")
 
     sign_in(requester)
     visit ticket_path(ticket)
@@ -45,7 +52,14 @@ RSpec.describe "Ticket status and comments", type: :system do
       expect(page).not_to have_content("Internal diagnosis")
     end
 
+<<<<<<< HEAD
     fill_in "comment[body]", with: "Thanks for the update"
+=======
+    # CHANGED: same label as above
+    fill_in "Leave a comment", with: "Thanks for the update"
+    # Requesters don’t see visibility select, so just submit
+    # CHANGED: button text
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74
     click_button "Comment"
 
     expect(page).to have_content("Comment added successfully.")

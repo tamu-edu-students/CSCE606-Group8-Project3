@@ -24,6 +24,7 @@ When("I submit the ticket form") do
 end
 
 When("I remove the attachment named {string}") do |filename|
+<<<<<<< HEAD
   # find the list item that contains the filename and check the remove checkbox inside it
   # Support multiple possible class names for the attachments list across themes
   container_selector = if page.has_css?('.existing-attachments')
@@ -33,6 +34,15 @@ When("I remove the attachment named {string}") do |filename|
   else
     # fallback to any list containing the filename
     nil
+=======
+  within(".attachment-manage-list") do
+    # Find the row/div for the attachment with this filename
+    item = find(".attachment-manage-item", text: filename)
+
+    # Find the checkbox inside it (visible or not) and tick it
+    checkbox = item.find('input[type="checkbox"]', visible: :all)
+    checkbox.set(true)
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74
   end
 
     # Support multiple attachments-list renderings used by the app

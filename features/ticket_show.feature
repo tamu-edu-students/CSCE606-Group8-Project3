@@ -17,11 +17,21 @@ Feature: View ticket details
     And I should see "Open"
     And I should see "Priority"
     And I should see "High"
+<<<<<<< HEAD
     And I should see "Technical Issue"
     And I should see "Submitter"
     And I should see "Viewer Name"
     And I should see "Unassigned"
     And I should see "Discussion"
+=======
+    And I should see "Category"
+    And I should see "Technical Issue"
+    And I should see "Submitter"
+    And I should see "Viewer Name"
+    And I should see "Assignment"
+    And I should see "None"
+    And I should see "No comments"
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74
     And I should see "No comments yet."
 
   Scenario: View a resolved ticket shows resolved timestamp (history)
@@ -31,5 +41,8 @@ Feature: View ticket details
     And I am on the ticket page for "Billing discrepancy"
     Then I should see "Billing discrepancy"
     And I should see "Resolved"
+<<<<<<< HEAD
     And I should see "Priority"
     And I should see "High"
+=======
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74

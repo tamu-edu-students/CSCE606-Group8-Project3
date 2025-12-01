@@ -11,7 +11,11 @@ Feature: Delete Ticket
 
     Scenario: Successfully deleting a ticket
         Given I am on the ticket page for "Test Ticket"
+<<<<<<< HEAD
         When I press "Delete Ticket"
+=======
+        When I press "Delete"
+>>>>>>> dc64dcc2f8a485aff8d41709b32bf8f4f248fe74
         Then I should see "Ticket deleted successfully."
         And I should not see "Test Ticket" in the ticket list
 

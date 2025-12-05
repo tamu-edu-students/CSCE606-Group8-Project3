@@ -7,6 +7,7 @@ Rails.application.routes.draw do
     collection do
       get :mine
       get :board
+      post :bulk_actions
     end
     member do
       patch :assign

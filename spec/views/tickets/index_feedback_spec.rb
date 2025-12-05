@@ -35,7 +35,7 @@ RSpec.describe "tickets/index", type: :view do
       customer_service_rating: nil
     )
 
-    assign(:tickets, [rated_ticket, unrated_ticket])
+    assign(:tickets, [ rated_ticket, unrated_ticket ])
     assign(:status_options, Ticket.statuses.keys)
     assign(:approval_status_options, Ticket.approval_statuses.keys)
     assign(:category_options, [])

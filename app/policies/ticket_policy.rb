@@ -32,7 +32,9 @@ class TicketPolicy < ApplicationPolicy
     end
     attrs
   end
-
+  def bulk_actions?
+    user&.agent? || user&.admin?
+  end
   def update?
     return false if record.resolved?
     return true if user.admin?

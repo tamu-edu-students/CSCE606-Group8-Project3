@@ -256,7 +256,63 @@ class TicketsController < ApplicationController
       redirect_to @ticket, alert: @ticket.errors.full_messages.to_sentence
     end
   end
+
+  def bulk_actions
+    authorize Ticket, :bulk_actions?
+
+    ids = Array(params[:ticket_ids]).map(&:to_i).uniq
+    if ids.empty?
+      redirect_back fallback_location: tickets_path, alert: "No tickets selected." and return
+    end
+
+    bulk_action = params[:bulk_action].to_s
+    tickets = policy_scope(Ticket).where(id: ids)
+
+    case bulk_action
+    when "close"
+      bulk_close_tickets(tickets)
+    when "delete"
+      bulk_delete_tickets(tickets)
+    else
+      redirect_back fallback_location: tickets_path, alert: "No bulk action selected." and return
+    end
+  end
   private
+
+  def bulk_close_tickets(tickets)
+    count = 0
+
+    Ticket.transaction do
+      tickets.each do |ticket|
+        # reuse same semantics as your `close` action
+        if ticket.update(status: :resolved)
+          TicketMailer.with(ticket: ticket).ticket_updated_email.deliver_later
+          count += 1
+        end
+      end
+    end
+
+    redirect_back fallback_location: tickets_path, notice: "#{count} ticket(s) resolved."
+  rescue => e
+    redirect_back fallback_location: tickets_path, alert: "Could not bulk resolve tickets: #{e.message}"
+  end
+
+  def bulk_delete_tickets(tickets)
+    count = 0
+
+    Ticket.transaction do
+      tickets.each do |ticket|
+        ticket.destroy!
+        count += 1
+      end
+    end
+
+    redirect_back fallback_location: tickets_path, notice: "#{count} ticket(s) deleted."
+  rescue => e
+    redirect_back fallback_location: tickets_path, alert: "Could not bulk delete tickets: #{e.message}"
+  end
+
+  # ... rest of your private methods
 
   def apply_filters!
     @tickets = @tickets.where(status: params[:status]) if params[:status].present?

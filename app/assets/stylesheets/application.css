@@ -1406,3 +1406,14 @@ textarea {
   /* Green Text */
   border-color: #bef5cb !important;
 }
+
+.ticket-bulk-checkbox {
+  margin-right: 0.75rem;
+  margin-top: 0.25rem;
+}
+.bulk-actions-toolbar {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+}

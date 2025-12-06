@@ -187,4 +187,90 @@ RSpec.describe TicketsController, type: :request do
       expect(assigns(:tickets_by_status)["open"]).not_to be_empty
     end
   end
+
+  describe "POST /tickets/bulk_actions" do
+    let!(:ticket1) { create(:ticket, status: :open, requester: requester, team: team) }
+    let!(:ticket2) { create(:ticket, status: :open, requester: requester, team: team) }
+    let!(:ticket3) { create(:ticket, status: :open, requester: requester) } # outside team, just to ensure not all are touched
+
+    context "as staff/agent" do
+      before { sign_in(agent) }
+
+      it "closes selected tickets" do
+        post bulk_actions_tickets_path, params: {
+          bulk_action: "close",
+          ticket_ids: [ ticket1.id, ticket2.id ]
+        }
+
+        expect(ticket1.reload.status).to eq("resolved")
+        expect(ticket2.reload.status).to eq("resolved")
+        expect(ticket1.closed_at).not_to be_nil
+        expect(ticket2.closed_at).not_to be_nil
+
+        # untouched
+        expect(ticket3.reload.status).to eq("open")
+      end
+
+      it "deletes selected tickets" do
+        expect {
+          post bulk_actions_tickets_path, params: {
+            bulk_action: "delete",
+            ticket_ids: [ ticket1.id, ticket2.id ]
+          }
+        }.to change(Ticket, :count).by(-2)
+
+        expect(Ticket.exists?(ticket1.id)).to be_falsey
+        expect(Ticket.exists?(ticket2.id)).to be_falsey
+        expect(Ticket.exists?(ticket3.id)).to be_truthy
+      end
+
+      it "does nothing when no ticket_ids are provided" do
+        expect {
+          post bulk_actions_tickets_path, params: {
+            bulk_action: "close"
+          }
+        }.not_to change(Ticket, :count)
+
+        expect(ticket1.reload.status).to eq("open")
+        expect(ticket2.reload.status).to eq("open")
+        expect(response).to redirect_to(tickets_path)
+      end
+
+      it "does nothing when bulk_action is missing" do
+        expect {
+          post bulk_actions_tickets_path, params: {
+            ticket_ids: [ ticket1.id, ticket2.id ]
+          }
+        }.not_to change { [ ticket1.reload.status, ticket2.reload.status ] }
+
+        expect(response).to redirect_to(tickets_path)
+      end
+    end
+
+    context "as regular requester (user)" do
+      before { sign_in(requester) }
+
+      it "raises Pundit::NotAuthorizedError" do
+        expect {
+          post bulk_actions_tickets_path, params: {
+            bulk_action: "close",
+            ticket_ids: [ ticket1.id ]
+          }
+        }.to raise_error(Pundit::NotAuthorizedError)
+      end
+    end
+
+    context "as admin" do
+      before { sign_in(admin) }
+
+      it "can perform bulk deletes" do
+        expect {
+          post bulk_actions_tickets_path, params: {
+            bulk_action: "delete",
+            ticket_ids: [ ticket1.id, ticket2.id ]
+          }
+        }.to change(Ticket, :count).by(-2)
+      end
+    end
+  end
 end

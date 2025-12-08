@@ -4,6 +4,10 @@ A robust SaaS application for managing support tickets, designed for University 
 
 **Course:** CSCE 606 (Software Engineering) **Semester:** Fall 2025
 
+**Deployed Link:** https://csce606-group8-projecct3-92ec204546d7.herokuapp.com/ 
+
+**The technical documentation (regarding deployment, code structure, ADRs) have been placed in the docs/project3 folder**
+
 ## Team Members
 
 -   **Shreya Sahni:** User Profile, Analytics Dashboard, Documentation
